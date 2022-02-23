@@ -7,6 +7,6 @@ import com.test.assignment.databinding.RowTrendingRepoBinding
 
 class MainViewHolder(private val binder: RowTrendingRepoBinding): RecyclerView.ViewHolder(binder.root) {
     fun bind(trendingRepo : TrendingRepo) {
-
+        binder.tvTitle.text = trendingRepo.name
     }
 }
