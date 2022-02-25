@@ -4,6 +4,13 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.net.NetworkInfo
+import androidx.core.content.ContextCompat
+
+import androidx.core.content.ContextCompat.getSystemService
+
+
+
 
 class NetworkHelper constructor(private val context: Context) {
 

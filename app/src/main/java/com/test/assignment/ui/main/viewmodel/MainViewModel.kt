@@ -19,10 +19,10 @@ class MainViewModel(
         get() = _repos
 
     init {
-
+        fetchRepos()
     }
 
-    private fun fetchRepos(){
+    fun fetchRepos(){
         viewModelScope.launch {
             _repos.postValue(Resource.loading(null))
             if (networkHelper.isNetworkConnected()) {

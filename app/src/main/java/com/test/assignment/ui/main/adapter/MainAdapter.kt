@@ -10,11 +10,11 @@ import com.test.assignment.ui.main.viewholders.MainViewHolder
 import java.util.ArrayList
 
 class MainAdapter : RecyclerView.Adapter<MainViewHolder>() {
-    private var items: List<TrendingRepo> = ArrayList()
-
+    private var items: ArrayList<TrendingRepo> = arrayListOf()
     @SuppressLint("NotifyDataSetChanged")
     fun setItems(items: List<TrendingRepo>) {
-        this.items = items
+        this.items.clear()
+        this.items.addAll(items)
         notifyDataSetChanged()
     }
 

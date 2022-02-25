@@ -3,6 +3,7 @@ package com.test.assignment.ui.main.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -21,13 +22,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: MainAdapter
 
     lateinit var binding: ActivityMainBinding
+    private var items = arrayListOf<TrendingRepo>()
+    private var matchedRepo: ArrayList<TrendingRepo> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
         setupUI()
         setupObserver()
+
     }
 
     private fun setupUI() {
@@ -46,8 +50,14 @@ class MainActivity : AppCompatActivity() {
             when (it.status) {
                 Status.SUCCESS -> {
                     binding.progressBar.visibility = View.GONE
-                    it.data?.let { users -> renderList(users) }
                     binding.recyclerView.visibility = View.VISIBLE
+                    it.data?.let { repos ->
+                        items.clear()
+                        items.addAll(repos)
+                        renderList(items)
+                        performSearch()
+                    }
+
                 }
                 Status.LOADING -> {
                     binding.progressBar.visibility = View.VISIBLE
@@ -61,9 +71,42 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun renderList(repos: List<TrendingRepo>) {
+    private fun renderList(repos:ArrayList<TrendingRepo>) {
         adapter.setItems(repos)
+        binding.searchView.isSubmitButtonEnabled = true
     }
+
+    private fun performSearch() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                search(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                search(newText)
+                return true
+            }
+        })
+    }
+
+    private fun search(text: String?) {
+        matchedRepo = arrayListOf()
+
+        text?.let {
+            items.forEach { repo ->
+                if (repo.name.common.contains(text, true)) {
+                    matchedRepo.add(repo)
+                }
+            }
+            renderList(matchedRepo)
+            if (matchedRepo.isEmpty()) {
+                Toast.makeText(this, "No match found!", Toast.LENGTH_SHORT).show()
+            }
+            renderList(matchedRepo)
+        }
+    }
+
 
 
 }

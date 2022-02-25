@@ -5,7 +5,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 
 interface ApiService {
-    @GET("users")
+    @GET("europe")
     suspend fun getTrendingRepos(): Response<List<TrendingRepo>>
 
 }
