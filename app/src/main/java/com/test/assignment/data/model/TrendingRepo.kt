@@ -7,7 +7,8 @@ data class TrendingRepo(
     @Json(name="name")
     val name: Name,
     @Json(name="flags")
-    val flags: Flags
+    val flags: Flags,
+    var isSelected: Boolean = false
 )
 data class Name(
     @Json(name="common")

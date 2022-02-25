@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupUI() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = MainAdapter()
+        adapter = MainAdapter(onItemSelected)
         binding.recyclerView.addItemDecoration(
             DividerItemDecoration(
                 binding.recyclerView.context,
@@ -74,6 +74,28 @@ class MainActivity : AppCompatActivity() {
     private fun renderList(repos:ArrayList<TrendingRepo>) {
         adapter.setItems(repos)
         binding.searchView.isSubmitButtonEnabled = true
+        if(mainViewModel.curSelectedIndex!=-1 || mainViewModel.preSelectedIndex!=-1){
+            adapter.updateSelection(mainViewModel.curSelectedIndex,false)
+            adapter.updateSelection(mainViewModel.preSelectedIndex,false)
+        }
+    }
+
+    private val onItemSelected = { repo: TrendingRepo, position: Int ->
+        mainViewModel.curSelectedIndex = position
+        if(mainViewModel.curSelectedIndex==mainViewModel.preSelectedIndex){
+            //deselect
+            adapter.updateSelection(mainViewModel.curSelectedIndex,false)
+            mainViewModel.curSelectedIndex = -1
+            mainViewModel.preSelectedIndex = -1
+
+        }else{
+            //select
+            adapter.updateSelection(mainViewModel.preSelectedIndex,false)
+            adapter.updateSelection(mainViewModel.curSelectedIndex,true)
+            mainViewModel.preSelectedIndex = mainViewModel.curSelectedIndex
+
+        }
+
     }
 
     private fun performSearch() {

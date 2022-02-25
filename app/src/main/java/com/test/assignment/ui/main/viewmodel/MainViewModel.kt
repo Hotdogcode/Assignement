@@ -14,6 +14,10 @@ class MainViewModel(
     private val mainRepo: MainRepo,
     private val networkHelper: NetworkHelper
 ): ViewModel() {
+
+    var preSelectedIndex = -1
+    var curSelectedIndex = -1
+
     private val _repos = MutableLiveData<Resource<List<TrendingRepo>>>()
     val repos: LiveData<Resource<List<TrendingRepo>>>
         get() = _repos
