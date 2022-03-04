@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/AndroidProjects/Assignment/app/src/main/res/layout/activity_main.xml" value="0.18645833333333334" />
         <entry key="..\:/AndroidProjects/Assignment/app/src/main/res/layout/row_trending_repo.xml" value="0.33" />
+        <entry key="..\:/AndroidProjects/Assignment/app/src/main/res/layout/row_trending_repo_selected.xml" value="0.18645833333333334" />
       </map>
     </option>
   </component>

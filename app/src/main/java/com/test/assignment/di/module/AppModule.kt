@@ -1,7 +1,6 @@
 package com.test.assignment.di.module
 
 import android.content.Context
-import androidx.viewbinding.BuildConfig
 import com.test.assignment.data.api.ApiHelper
 import com.test.assignment.data.api.ApiHelperImpl
 import com.test.assignment.data.api.ApiService

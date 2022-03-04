@@ -1,14 +1,14 @@
 package com.test.assignment.ui.main.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.test.assignment.R
 import com.test.assignment.data.model.TrendingRepo
 import com.test.assignment.databinding.ActivityMainBinding
 import com.test.assignment.ui.main.adapter.MainAdapter
@@ -16,27 +16,25 @@ import com.test.assignment.ui.main.viewmodel.MainViewModel
 import com.test.assignment.utils.Status
 import org.koin.android.viewmodel.ext.android.viewModel
 
+
 class MainActivity : AppCompatActivity() {
 
-    private val mainViewModel : MainViewModel by viewModel()
-    private lateinit var adapter: MainAdapter
-
-    lateinit var binding: ActivityMainBinding
-    private var items = arrayListOf<TrendingRepo>()
-    private var matchedRepo: ArrayList<TrendingRepo> = arrayListOf()
-
+    private val mainViewModel: MainViewModel by viewModel()
+    private lateinit var binding: ActivityMainBinding
+    lateinit var adapter: MainAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupUI()
         setupObserver()
-
     }
 
+
+
     private fun setupUI() {
+        adapter = MainAdapter(mainViewModel.listData,onItemSelected)
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = MainAdapter(onItemSelected)
         binding.recyclerView.addItemDecoration(
             DividerItemDecoration(
                 binding.recyclerView.context,
@@ -52,12 +50,13 @@ class MainActivity : AppCompatActivity() {
                     binding.progressBar.visibility = View.GONE
                     binding.recyclerView.visibility = View.VISIBLE
                     it.data?.let { repos ->
-                        items.clear()
-                        items.addAll(repos)
-                        renderList(items)
+                        if(repos.isNotEmpty()) {
+                            Log.e("aslam",repos[0].flag)
+                            mainViewModel.updateData(repos)
+                            renderList()
+                        }
                         performSearch()
                     }
-
                 }
                 Status.LOADING -> {
                     binding.progressBar.visibility = View.VISIBLE
@@ -69,15 +68,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-    }
-
-    private fun renderList(repos:ArrayList<TrendingRepo>) {
-        adapter.setItems(repos)
-        binding.searchView.isSubmitButtonEnabled = true
-        if(mainViewModel.curSelectedIndex!=-1 || mainViewModel.preSelectedIndex!=-1){
-            adapter.updateSelection(mainViewModel.curSelectedIndex,false)
-            adapter.updateSelection(mainViewModel.preSelectedIndex,false)
-        }
     }
 
     private val onItemSelected = { repo: TrendingRepo, position: Int ->
@@ -98,6 +88,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun renderList() {
+        adapter.refresh()
+        binding.searchView.isSubmitButtonEnabled = true
+        if(mainViewModel.curSelectedIndex!=-1 || mainViewModel.preSelectedIndex!=-1){
+            adapter.updateSelection(mainViewModel.curSelectedIndex,false)
+            adapter.updateSelection(mainViewModel.preSelectedIndex,false)
+        }
+    }
+
+
     private fun performSearch() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -113,19 +113,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun search(text: String?) {
-        matchedRepo = arrayListOf()
-
+        val matchedItems = ArrayList<TrendingRepo>()
         text?.let {
-            items.forEach { repo ->
+            mainViewModel.items.forEach { repo ->
                 if (repo.name.common.contains(text, true)) {
-                    matchedRepo.add(repo)
+                    matchedItems.add(repo)
                 }
             }
-            renderList(matchedRepo)
-            if (matchedRepo.isEmpty()) {
+            mainViewModel.updateMatchedData(matchedItems)
+            if (matchedItems.isEmpty()) {
                 Toast.makeText(this, "No match found!", Toast.LENGTH_SHORT).show()
             }
-            renderList(matchedRepo)
+            renderList()
         }
     }
 

@@ -7,14 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.test.assignment.data.model.TrendingRepo
 import com.test.assignment.databinding.RowTrendingRepoBinding
 import com.test.assignment.ui.main.viewholders.MainViewHolder
-import java.util.ArrayList
 
-class MainAdapter( private val onItemSelected: (repo: TrendingRepo, position: Int) -> Unit) : RecyclerView.Adapter<MainViewHolder>() {
-    private var items: ArrayList<TrendingRepo> = arrayListOf()
+class MainAdapter(var items: ArrayList<TrendingRepo>, private val onItemSelected: (repo: TrendingRepo, position: Int) -> Unit) : RecyclerView.Adapter<MainViewHolder>() {
+
+
     @SuppressLint("NotifyDataSetChanged")
-    fun setItems(items: List<TrendingRepo>) {
-        this.items.clear()
-        this.items.addAll(items)
+    fun refresh() {
         notifyDataSetChanged()
     }
 

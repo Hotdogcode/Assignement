@@ -1,26 +1,34 @@
 package com.test.assignment.ui.main.viewholders
 
-import android.view.View
+import android.graphics.drawable.ColorDrawable
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.request.RequestOptions
 import com.test.assignment.data.model.TrendingRepo
 import com.test.assignment.databinding.RowTrendingRepoBinding
-import com.test.assignment.ui.main.adapter.MainAdapter
-import com.test.assignment.utils.loadImage
 
 
-class MainViewHolder(private val binder: RowTrendingRepoBinding,private val onItemSelected: (repo: TrendingRepo, position: Int) -> Unit): RecyclerView.ViewHolder(binder.root) {
+class MainViewHolder(private val binder: RowTrendingRepoBinding,private val onItemSelected: (repo: TrendingRepo, position: Int) -> Unit): RecyclerView.ViewHolder(binder.root),
+    LifecycleOwner {
+
+    var lifecycle = LifecycleRegistry(this)
+
     fun bind(trendingRepo : TrendingRepo) {
         binder.tvTitle.text = trendingRepo.name.common
-        binder.ivIcon.loadImage(
-            resource = "https://flagcdn.com/w320/me.png",
-            requestOptions = RequestOptions().circleCrop()
-        )
+        binder.tvSubTitle.text = trendingRepo.name.official
+        binder.ivIcon.text = trendingRepo.flag
         itemView.setOnClickListener {
             onItemSelected(trendingRepo,bindingAdapterPosition)
         }
         if(trendingRepo.isSelected){
-            binder.tvTitle.text = "Selected"
+            binder.mainView.background = ColorDrawable(0xFF03DAC5.toInt())
+        }else{
+            binder.mainView.background = ColorDrawable(0x00000)
         }
+    }
+
+    override fun getLifecycle(): Lifecycle {
+        return lifecycle
     }
 }
