@@ -5,12 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.test.assignment.data.model.TrendingRepo
+import com.test.assignment.data.repository.IMainRepo
 import com.test.assignment.data.repository.MainRepo
 import com.test.assignment.utils.Resource
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    val mainRepo: MainRepo
+    val mainRepo: IMainRepo
 ): ViewModel() {
     var preSelectedIndex = -1
     var curSelectedIndex = -1
@@ -25,7 +26,6 @@ class MainViewModel(
 
 
     init {
-
         fetchRepos()
     }
 
@@ -50,7 +50,7 @@ class MainViewModel(
 
 
 
-    private fun fetchRepos(){
+    fun fetchRepos(){
         viewModelScope.launch {
             mainRepo.getTrendingRepos().let {
                 if (it.isSuccessful) {
