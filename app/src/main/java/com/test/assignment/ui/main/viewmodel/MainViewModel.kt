@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.test.assignment.data.model.TrendingRepo
 import com.test.assignment.data.repository.IMainRepo
-import com.test.assignment.data.repository.MainRepo
 import com.test.assignment.utils.Resource
 import kotlinx.coroutines.launch
 
